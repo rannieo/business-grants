@@ -1,5 +1,5 @@
 KEEP_FIELDS = [
-    "id", "name", "summary", "applicant_type",
+    "id", "name", "summary", "supports", "applicant_type",
     "employee_count_min", "revenue_band", "business_goals",
     "requires_local_entity", "requires_new_market", "notes",
 ]

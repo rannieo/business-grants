@@ -8,7 +8,7 @@ export type GrantResult = {
 }
 
 export type ChatResponse =
-  | { type: 'question'; question: string }
+  | { type: 'question'; question: string; options?: string[] }
   | { type: 'recommendation'; grants: GrantResult[]; tradeoffs: string }
 
 const API = 'http://localhost:8000'

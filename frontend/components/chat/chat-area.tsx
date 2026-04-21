@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import MessageBubble, { type Message } from './message-bubble'
 import MessageInput from './message-input'
+import SuggestedOpeners from './suggested-openers'
 
 type Props = {
   messages: Message[]
@@ -18,6 +19,8 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  const showOpeners = messages.length === 1 && !isPending
 
   return (
     <div className="flex flex-col flex-1 h-screen overflow-hidden">
@@ -51,13 +54,21 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
 
       {/* Messages */}
       <ScrollArea className="flex-1 overflow-hidden">
-        <div className="px-6 py-6">
+        <div className="px-6 pt-6">
           {messages.map((msg, i) => (
-            <MessageBubble key={i} message={msg} />
+            <MessageBubble
+              key={i}
+              message={msg}
+              onSend={onSend}
+              isLast={i === messages.length - 1}
+            />
           ))}
           {isPending && <TypingIndicator />}
           <div ref={bottomRef} />
         </div>
+
+        {/* Suggested openers shown only before the first user message */}
+        {showOpeners && <SuggestedOpeners onSelect={onSend} />}
       </ScrollArea>
 
       {/* Input */}
@@ -70,7 +81,7 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
 
 function TypingIndicator() {
   return (
-    <div className="flex justify-start mb-3">
+    <div className="flex justify-start mb-3 px-0">
       <div className="flex items-center gap-2.5">
         <div
           className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-[#89f5e7]"

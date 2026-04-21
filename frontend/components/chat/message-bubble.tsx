@@ -5,7 +5,13 @@ type UserMessage = { role: 'user'; text: string }
 type AssistantMessage = { role: 'assistant'; data: ChatResponse }
 export type Message = UserMessage | AssistantMessage
 
-export default function MessageBubble({ message }: { message: Message }) {
+type Props = {
+  message: Message
+  onSend?: (text: string) => void
+  isLast?: boolean
+}
+
+export default function MessageBubble({ message, onSend, isLast }: Props) {
   if (message.role === 'user') {
     return (
       <div className="flex justify-end mb-3">
@@ -24,10 +30,26 @@ export default function MessageBubble({ message }: { message: Message }) {
   if (data.type === 'question') {
     return (
       <div className="flex justify-start mb-3">
-        <div className="flex items-start gap-2.5 max-w-[80%]">
+        <div className="flex items-start gap-2.5 max-w-[85%]">
           <Avatar />
-          <div className="bg-[#f5f3f6] px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-[#1b1b1e] leading-relaxed">
-            {data.question}
+          <div>
+            <div className="bg-[#f5f3f6] px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-[#1b1b1e] leading-relaxed">
+              {data.question}
+            </div>
+            {isLast && data.options && data.options.length > 0 && onSend && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {data.options.map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => onSend(opt)}
+                    className="px-3 py-1.5 rounded-full text-xs border text-[#041635] bg-[#ffffff] hover:bg-[#f5f3f6] transition-colors"
+                    style={{ borderColor: 'rgba(197, 198, 207, 0.6)' }}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

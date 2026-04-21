@@ -14,13 +14,51 @@ MISSING_FIELD_QUESTIONS = {
     "local_entity": "Is your company registered and operating in Singapore?",
 }
 
+VAGUE_OPTIONS = [
+    "We want to expand into a new overseas market",
+    "We're building a new product or solution",
+    "We want to automate our operations",
+    "We need to hire and reskill staff",
+    "We want to build digital capabilities",
+    "We need a certification or standard",
+]
+
+MISSING_FIELD_OPTIONS = {
+    "business_goal": [
+        "Expand into a new overseas market",
+        "Build a new product or solution",
+        "Automate or improve our processes",
+        "Hire and reskill our team",
+        "Build digital capabilities",
+        "Achieve a certification or standard",
+    ],
+    "employee_count": [
+        "1–10 employees",
+        "11–30 employees",
+        "31–100 employees",
+        "100+ employees",
+    ],
+    "local_entity": [
+        "Yes, we are registered in Singapore",
+        "No, we are not based in Singapore",
+    ],
+}
+
 
 class Clarifier:
     def for_vague(self) -> dict:
-        return {"type": "question", "question": VAGUE_QUESTION}
+        return {
+            "type": "question",
+            "question": VAGUE_QUESTION,
+            "options": VAGUE_OPTIONS,
+        }
 
     def for_missing(self, missing_fields: list[str]) -> dict | None:
         for field in ["business_goal", "employee_count", "local_entity"]:
             if field in missing_fields:
-                return {"type": "question", "question": MISSING_FIELD_QUESTIONS[field]}
+                return {
+                    "type": "question",
+                    "question": MISSING_FIELD_QUESTIONS[field],
+                    "options": MISSING_FIELD_OPTIONS[field],
+                }
         return None

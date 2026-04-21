@@ -15,10 +15,10 @@ def compressor():
     return Compressor()
 
 
-def test_strips_supports_field(compressor, grants):
+def test_keeps_supports_field(compressor, grants):
     result = compressor.compress(grants[:3])
     for g in result:
-        assert "supports" not in g
+        assert "supports" in g
 
 
 def test_keeps_id_and_name(compressor, grants):
