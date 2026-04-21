@@ -1,0 +1,183 @@
+[
+  {
+    "id": "mra",
+    "name": "Market Readiness Assistance",
+    "summary": "Supports overseas market entry and business development activities.",
+    "supports": [
+      "overseas expansion",
+      "market entry",
+      "business development",
+      "overseas marketing"
+    ],
+    "applicant_type": ["sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["under_100m"],
+    "business_goals": ["overseas_expansion"],
+    "requires_local_entity": true,
+    "requires_new_market": true,
+    "notes": [
+      "Best suited for companies entering a new overseas market.",
+      "Often relevant when the company has a concrete target market."
+    ]
+  },
+  {
+    "id": "edg_automation",
+    "name": "Enterprise Development Grant - Automation",
+    "summary": "Supports projects that improve productivity through process redesign and automation.",
+    "supports": [
+      "automation",
+      "process improvement",
+      "productivity",
+      "operational efficiency"
+    ],
+    "applicant_type": ["sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["under_100m"],
+    "business_goals": ["automation", "process_improvement"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Best suited for businesses trying to reduce manual work or improve throughput.",
+      "Can overlap with broader operational transformation projects."
+    ]
+  },
+  {
+    "id": "edg_npd",
+    "name": "Enterprise Development Grant - New Product Development",
+    "summary": "Supports the development and commercialization of new products or solutions.",
+    "supports": [
+      "new product development",
+      "innovation",
+      "commercialization",
+      "r&d"
+    ],
+    "applicant_type": ["sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["under_100m"],
+    "business_goals": ["new_product_development", "innovation"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Best suited for companies building something materially new.",
+      "Not ideal for minor feature upgrades or routine engineering work."
+    ]
+  },
+  {
+    "id": "ccp",
+    "name": "Career Conversion Programme",
+    "summary": "Supports structured reskilling of new or existing employees into redesigned roles.",
+    "supports": [
+      "hiring",
+      "reskilling",
+      "workforce transformation",
+      "job redesign"
+    ],
+    "applicant_type": ["sme", "non_sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["any"],
+    "business_goals": ["hiring", "reskilling", "job_redesign"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Most relevant when there is a clearly redesigned role and a structured training plan.",
+      "Can apply to either new hires or existing employees, depending on the programme design."
+    ]
+  },
+  {
+    "id": "ctc",
+    "name": "Company Training Committee Grant",
+    "summary": "Supports workforce transformation tied to business transformation and employee outcomes.",
+    "supports": [
+      "workforce transformation",
+      "training",
+      "job redesign",
+      "business transformation"
+    ],
+    "applicant_type": ["sme", "non_sme"],
+    "employee_count_min": 30,
+    "employee_count_max": null,
+    "revenue_band": ["any"],
+    "business_goals": [
+      "workforce_transformation",
+      "training",
+      "job_redesign",
+      "automation"
+    ],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Usually more suitable for larger transformation projects with meaningful employee impact.",
+      "Less suitable for very small companies."
+    ]
+  },
+  {
+    "id": "dlp",
+    "name": "Digital Leaders Programme",
+    "summary": "Supports companies building a digital team and executing substantial digital transformation initiatives.",
+    "supports": [
+      "digital transformation",
+      "digital team hiring",
+      "new digital capability",
+      "software development"
+    ],
+    "applicant_type": ["sme"],
+    "employee_count_min": 5,
+    "employee_count_max": null,
+    "revenue_band": ["under_100m"],
+    "business_goals": ["digital_transformation", "software_build", "hiring"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Most relevant when the company is building real digital capability rather than buying only off-the-shelf software.",
+      "Better fit for businesses with clear digital initiatives."
+    ]
+  },
+  {
+    "id": "standards",
+    "name": "Enterprise Development Grant - Standards Adoption",
+    "summary": "Supports adoption of recognised standards or certifications to improve capability and market readiness.",
+    "supports": [
+      "standards adoption",
+      "certification",
+      "compliance",
+      "market readiness"
+    ],
+    "applicant_type": ["sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["under_100m"],
+    "business_goals": ["certification", "compliance", "market_readiness"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Relevant when certification is needed to sell into regulated markets or meet partner requirements.",
+      "Less relevant if the business problem is mainly hiring or automation."
+    ]
+  },
+  {
+    "id": "eis",
+    "name": "Enterprise Innovation Scheme",
+    "summary": "Provides enhanced support for qualifying innovation and capability development activities.",
+    "supports": [
+      "innovation",
+      "r&d",
+      "capability development",
+      "technology development"
+    ],
+    "applicant_type": ["sme", "non_sme"],
+    "employee_count_min": 1,
+    "employee_count_max": null,
+    "revenue_band": ["any"],
+    "business_goals": ["innovation", "r&d", "technology_development"],
+    "requires_local_entity": true,
+    "requires_new_market": false,
+    "notes": [
+      "Broadly relevant for companies investing in innovation capability.",
+      "May be less direct than a grant tied to a specific transformation project."
+    ]
+  }
+]

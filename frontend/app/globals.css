@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-display);
+    --font-sans: var(--font-body);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary-container: var(--primary-container);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-tertiary-fixed: var(--tertiary-fixed);
+    --color-tertiary-container: var(--tertiary-container);
+    --color-surface-low: var(--surface-low);
+    --color-surface-high: var(--surface-high);
+    --color-surface-lowest: var(--surface-lowest);
+    --color-on-surface: var(--on-surface);
+    --color-on-surface-variant: var(--on-surface-variant);
+    --color-on-primary: var(--on-primary);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+    /* Stitch "Institutional Architect" palette */
+    --background: #fbf8fc;
+    --foreground: #1b1b1e;
+    --card: #ffffff;
+    --card-foreground: #1b1b1e;
+    --popover: #ffffff;
+    --popover-foreground: #1b1b1e;
+    --primary: #041635;
+    --primary-foreground: #ffffff;
+    --primary-container: #1b2b4b;
+    --secondary: #dadff1;
+    --secondary-foreground: #414755;
+    --muted: #f5f3f6;
+    --muted-foreground: #44474e;
+    --accent: #f5f3f6;
+    --accent-foreground: #1b1b1e;
+    --destructive: #ba1a1a;
+    --border: #c5c6cf26;
+    --input: #e9e7eb;
+    --ring: #041635;
+    --radius: 0.5rem;
+    /* Stitch extra tokens */
+    --tertiary-fixed: #89f5e7;
+    --tertiary-container: #00322d;
+    --surface-low: #f5f3f6;
+    --surface-high: #e9e7eb;
+    --surface-lowest: #ffffff;
+    --on-surface: #1b1b1e;
+    --on-surface-variant: #44474e;
+    --on-primary: #ffffff;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    html {
+        @apply font-sans;
+    }
+}

@@ -1,0 +1,1 @@
+The whole docs is located at README.md
