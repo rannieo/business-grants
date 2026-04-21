@@ -56,6 +56,25 @@ def test_strips_plain_markdown_fence(v):
     assert result is not None
 
 
+def test_extracts_json_from_prose_wrapped_code_fence(v):
+    inner = json.dumps({"type": "question", "question": "What is your goal?"})
+    raw = f"I can help with that.\\n```json\\n{inner}\\n```\\nLet me know."
+    result = v.parse_and_validate(raw)
+    assert result is not None
+    assert result["type"] == "question"
+
+
+def test_extracts_first_balanced_json_object_from_mixed_text(v):
+    raw = (
+        "Here is the result you asked for:\\n"
+        '{"type":"question","question":"How many employees do you have?"}'
+        "\\nThanks!"
+    )
+    result = v.parse_and_validate(raw)
+    assert result is not None
+    assert result["question"] == "How many employees do you have?"
+
+
 # --- Invalid cases ---
 
 def test_invalid_json_returns_none(v):

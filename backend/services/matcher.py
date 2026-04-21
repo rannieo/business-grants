@@ -1,3 +1,5 @@
+import json
+
 from pipeline.analyzer import QueryAnalyzer, QueryClass
 from pipeline.clarifier import Clarifier
 from pipeline.retriever import Retriever
@@ -56,7 +58,9 @@ class GrantMatcherService:
             raw = await self.driver.complete(prompt + "\n\nRespond with valid JSON only.")
             result = self.validator.parse_and_validate(raw)
             if result is None:
-                raise ValueError("LLM returned invalid response after retry")
+                result = self.clarifier.for_no_eligible()
+                self._record(history, user_message, result)
+                return result
 
         decision = self.eligibility_guard.enforce(result, profile, retrieved)
         if decision.response is not None:
@@ -74,4 +78,4 @@ class GrantMatcherService:
 
     def _record(self, history: list, user_msg: str, response: dict) -> None:
         history.append({"role": "user", "content": user_msg})
-        history.append({"role": "assistant", "content": str(response)})
+        history.append({"role": "assistant", "content": json.dumps(response)})

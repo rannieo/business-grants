@@ -117,7 +117,7 @@ Public API shape is unchanged:
 
 - `POST /api/chat` still returns either:
   - `{ type: "question", question, options? }`
-  - `{ type: "recommendation", grants, tradeoffs }`
+  - `{ type: "recommendation", grants, tradeoffs? }`
 - `DELETE /api/session/{session_id}` unchanged
 - `GET /api/grants` unchanged
 
@@ -145,9 +145,42 @@ I expanded backend coverage for the new hardening layer:
 
 Current backend status:
 
-- `89 passed` (`pytest -q`)
+- `92 passed` (`pytest -q`)
 
 I could not execute frontend lint/build in this environment because Node/NPM are not installed.
+
+## Clarifying questions I didn't ask
+
+The brief was intentionally lightweight. Here are the questions I could have raised and the assumptions I made instead:
+
+**What does a correct recommendation look like?**
+I assumed "correct" means: the business is provably eligible based on what they've told us, and every stated reason maps directly to a field in `grants.json`. I built the EligibilityGuard around this definition. An alternative interpretation — surface best-effort matches and let the user self-filter — would have led to a simpler system with no guard layer.
+
+**Should the system handle businesses outside Singapore?**
+I assumed Singapore-registered entities only, since every grant in the dataset requires `requires_local_entity: true`. I ask about Singapore registration as a clarifying question but don't hard-block non-local businesses — I leave that to the LLM's reasoning and the EligibilityGuard's enforcement.
+
+**What's the acceptable latency for a response?**
+I assumed that a 5–15 second wait for LLM-backed responses is acceptable given the conversational context. This directly informed the decision to use the Claude CLI subprocess rather than building streaming — streaming would have been the right call if the answer were "under 3 seconds, always".
+
+**Should recommendations be ranked by fit or by grant size?**
+I assumed fit quality is the right primary sort. The dataset doesn't include funding quanta, so this was partly forced by the data shape, but I would have clarified this in a real engagement.
+
+**Recall vs precision: when in doubt, show more or show fewer?**
+I opted for precision — the EligibilityGuard drops unverifiable recommendations rather than surfacing them. This means more clarification turns in some paths. The alternative (show everything, label confidence) would have been a different product call. I flagged this as a question for reviewers rather than assuming an answer.
+
+## Scope decisions
+
+What was deliberately left out, and why:
+
+- **No auth or persistent sessions.** In-memory keyed by UUID is proportionate for an assignment. Adding Redis or a database would have shifted the submission toward infra work rather than product reasoning.
+- **No observability stack.** Structured traces, metrics, and alerting are important in production but would have added significant scope with no benefit to a reviewer evaluating the submission.
+- **No grant application links or CTAs.** The dataset has no `application_url` field. Adding mock links would have been pure polish with no signal value.
+- **Desktop-first layout only.** The Stitch design is mobile-first by spec but the grant advisor use case (detailed business description, multi-turn) maps more naturally to desktop. I didn't build a mobile-optimised layout.
+- **No multi-language support.** All keyword heuristics and prompt instructions are English-only. A real Singapore deployment would need to consider Mandarin at minimum.
+
+## Tool use
+
+This submission was developed with the assistance of Claude Code (Anthropic's CLI). All architectural decisions, tradeoffs, module boundaries, and the write-up are my own. I can explain any part of the codebase and the reasoning behind it.
 
 ## Assumptions
 

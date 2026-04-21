@@ -154,13 +154,16 @@ async def test_no_eligible_recommendations_returns_missing_signal_question(grant
 
 
 @pytest.mark.asyncio
-async def test_two_invalid_responses_raises(grants):
+async def test_two_invalid_responses_returns_clarification(grants):
     mock_driver = AsyncMock(spec=LLMDriver)
     mock_driver.complete.return_value = "not json at all"
     service = GrantMatcherService(mock_driver, grants)
 
-    with pytest.raises(ValueError, match="invalid response"):
-        await service.chat(
-            "s7",
-            "We are a 10-person Singapore SME company with annual revenue under 100M and this is our first time expanding overseas."
-        )
+    result = await service.chat(
+        "s7",
+        "We are a 10-person Singapore SME company with annual revenue under 100M and this is our first time expanding overseas."
+    )
+
+    assert result["type"] == "question"
+    assert "one more detail" in result["question"].lower() or "could you share" in result["question"].lower()
+    assert mock_driver.complete.call_count == 2

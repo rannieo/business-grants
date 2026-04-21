@@ -4,12 +4,12 @@ export type GrantResult = {
   fit: 'high' | 'medium' | 'low'
   reason: string
   cited: Record<string, unknown>
-  caveats: string
+  caveats?: string
 }
 
 export type ChatResponse =
   | { type: 'question'; question: string; options?: string[] }
-  | { type: 'recommendation'; grants: GrantResult[]; tradeoffs: string }
+  | { type: 'recommendation'; grants: GrantResult[]; tradeoffs?: string }
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000'
 

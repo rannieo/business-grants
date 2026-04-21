@@ -10,6 +10,7 @@ PRIORITY = {
     "new_market": 2,
     "applicant_type": 3,
     "revenue_band": 4,
+    "business_goal": 5,
 }
 
 
