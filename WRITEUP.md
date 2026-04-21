@@ -11,10 +11,10 @@ The primary demo path: a 12-person Singapore software company expanding overseas
 ```
 User message
   → Query Analyzer (rule-based, NO LLM)
-      VAGUE      → Clarifier (template response, NO LLM)
-      BORDERLINE → Clarifier (targeted question, NO LLM)
-      CLEAR      → Retriever (keyword scoring, top-k)
-                   → Context Compressor (strip redundant fields)
+      VAGUE      → Clarifier (template response + options, NO LLM)
+      BORDERLINE → Clarifier (targeted question + options, NO LLM)
+      CLEAR      → Retriever (BM25, top-k)
+                   → Context Compressor
                    → Prompt Builder
                    → LLM Driver (Claude CLI subprocess)
                    → Validator (JSON parsing + schema check, retry once)
@@ -35,13 +35,21 @@ Every recommendation includes a `cited` block that maps specific field names fro
 
 ## Retrieval
 
-Top-k retrieval uses keyword overlap between the full conversation text and each grant's `business_goals` and `supports` fields. Business goals score 3 points per match; supports keywords score 1 point per word match. This is fast, deterministic, and debuggable — no embedding infra required.
+Top-k retrieval uses BM25 (`rank-bm25`) over a corpus built from all grant fields at startup. Each grant document includes: name, summary, business goals (underscore-separated slugs expanded to readable phrases), supports, notes, applicant type, and eligibility signals converted to searchable text — e.g. `requires_new_market: true` becomes `"first time new market overseas entry"`, and `applicant_type: ["sme"]` becomes `"sme small medium enterprise"`.
 
-The tradeoff: semantic similarity is not captured. A user saying "we want to go global" won't match `overseas_expansion` as reliably as "expand overseas". This is acceptable at this scale (8 grants); at hundreds of grants, embedding-based retrieval would be the right call.
+BM25 handles term frequency and document length normalisation automatically, so rare discriminating terms score higher than common ones without manual point weighting.
+
+The tradeoff: BM25 is still lexical. A user saying "we want to go global" won't match `overseas_expansion` as reliably as "expand overseas". At this scale (8 grants) this is acceptable; at hundreds of grants, embedding-based retrieval would be the right call.
 
 ## Grants dataset
 
-Used as-is. The `supports` field is stripped before prompting (redundant with `business_goals`, which is more structured). No other transformations.
+Used as-is. All fields are included in both the BM25 retrieval corpus and the prompt context sent to the LLM. No fields are stripped or transformed beyond expanding underscore-separated slugs into readable phrases for indexing.
+
+## Guided input
+
+The rule-based Clarifier includes a set of `options` alongside each question response. These are rendered in the UI as quick-reply chips so users can answer common clarifying questions (business goal, company size, Singapore registration) with a single tap rather than free-text. On the opening screen, six suggested openers cover the main grant categories and send a pre-formed message when selected.
+
+This removes the blank-page problem without constraining the user — free-text input remains available at all times.
 
 ## Session state
 
