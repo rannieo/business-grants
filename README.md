@@ -34,7 +34,15 @@ We are not looking for maximum feature count or polish for its own sake.
 
 ## Running locally
 
-**Requirements:** Python 3.11+, Node 18+, [Claude Code CLI](https://claude.ai/code) installed and authenticated (`claude` available on your PATH).
+**Requirements:** Python 3.11+, Node 18+, [Claude Code CLI](https://claude.ai/code) and [Codex CLI](https://github.com/openai/codex) installed/authenticated (`claude` and `codex` available on your PATH).
+
+### One-command local run
+
+```bash
+make serve
+```
+
+This starts both apps together (backend on `:8000`, frontend on `:3000`).
 
 ### Backend
 
@@ -44,6 +52,13 @@ pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
 ```
 
+Optional backend environment variables:
+
+- `LLM_PROVIDER` (default: `claude_cli`)
+- `LLM_TIMEOUT_SECONDS` (default: `45`)
+- `LLM_FALLBACK_PROVIDER` (default: `codex_cli`)
+- `CODEX_MODEL` (optional; used when `codex_cli` is selected)
+
 ### Frontend
 
 ```bash
@@ -51,6 +66,10 @@ cd frontend
 npm install
 npm run dev
 ```
+
+Optional frontend environment variable:
+
+- `NEXT_PUBLIC_API_BASE_URL` (default: `http://localhost:8000`)
 
 Open [http://localhost:3000](http://localhost:3000). The backend must be running at port 8000.
 

@@ -72,3 +72,22 @@ def test_for_missing_empty_list_returns_none(clarifier):
 
 def test_for_missing_unknown_fields_returns_none(clarifier):
     assert clarifier.for_missing(["revenue", "sector"]) is None
+
+
+def test_for_missing_new_market_returns_targeted_question(clarifier):
+    result = clarifier.for_missing(["new_market"])
+    assert result is not None
+    assert result["type"] == "question"
+    assert "first time" in result["question"].lower()
+
+
+def test_for_missing_applicant_type_returns_targeted_question(clarifier):
+    result = clarifier.for_missing(["applicant_type"])
+    assert result is not None
+    assert any("sme" in o.lower() for o in result["options"])
+
+
+def test_for_missing_revenue_band_returns_targeted_question(clarifier):
+    result = clarifier.for_missing(["revenue_band"])
+    assert result is not None
+    assert "100m" in result["question"].lower()

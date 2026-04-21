@@ -12,6 +12,9 @@ MISSING_FIELD_QUESTIONS = {
     ),
     "employee_count": "How many employees does your company currently have?",
     "local_entity": "Is your company registered and operating in Singapore?",
+    "new_market": "Is this your first time entering that overseas market?",
+    "applicant_type": "Would you classify your company as an SME or non-SME/large enterprise?",
+    "revenue_band": "Is your company's annual revenue under SGD 100M?",
 }
 
 VAGUE_OPTIONS = [
@@ -42,6 +45,18 @@ MISSING_FIELD_OPTIONS = {
         "Yes, we are registered in Singapore",
         "No, we are not based in Singapore",
     ],
+    "new_market": [
+        "Yes, this is our first time entering that market",
+        "No, we already operate in that market",
+    ],
+    "applicant_type": [
+        "We are an SME",
+        "We are a non-SME / large enterprise",
+    ],
+    "revenue_band": [
+        "Our annual revenue is under 100M",
+        "Our annual revenue is above 100M",
+    ],
 }
 
 
@@ -54,7 +69,7 @@ class Clarifier:
         }
 
     def for_missing(self, missing_fields: list[str]) -> dict | None:
-        for field in ["business_goal", "employee_count", "local_entity"]:
+        for field in ["business_goal", "local_entity", "employee_count", "new_market", "applicant_type", "revenue_band"]:
             if field in missing_fields:
                 return {
                     "type": "question",
@@ -62,3 +77,18 @@ class Clarifier:
                     "options": MISSING_FIELD_OPTIONS[field],
                 }
         return None
+
+    def for_no_eligible(self) -> dict:
+        return {
+            "type": "question",
+            "question": (
+                "I need one more detail to return only eligible grants. "
+                "Could you share your company size, Singapore registration status, and whether this is a new overseas market?"
+            ),
+            "options": [
+                "We are a 1–10 employee SME registered in Singapore",
+                "We are a 11–30 employee SME registered in Singapore",
+                "This is our first time entering that overseas market",
+                "We are a non-SME / large enterprise",
+            ],
+        }

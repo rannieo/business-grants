@@ -9,11 +9,13 @@ import SuggestedOpeners from './suggested-openers'
 type Props = {
   messages: Message[]
   isPending: boolean
+  retryMessage: string | null
   onSend: (text: string) => void
+  onRetry: () => void
   onNew: () => void
 }
 
-export default function ChatArea({ messages, isPending, onSend, onNew }: Props) {
+export default function ChatArea({ messages, isPending, retryMessage, onSend, onRetry, onNew }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -45,7 +47,9 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
         </div>
         <button
           onClick={onNew}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#041635] bg-[#f5f3f6] hover:bg-[#e9e7eb] transition-colors"
+          disabled={isPending}
+          aria-label="Start a new conversation"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#041635] bg-[#f5f3f6] hover:bg-[#e9e7eb] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-rounded text-base">add</span>
           New
@@ -54,13 +58,14 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
 
       {/* Messages */}
       <ScrollArea className="flex-1 overflow-hidden">
-        <div className="px-6 pt-6">
+        <div className="px-6 pt-6" role="log" aria-live="polite" aria-relevant="additions text">
           {messages.map((msg, i) => (
             <MessageBubble
               key={i}
               message={msg}
               onSend={onSend}
               isLast={i === messages.length - 1}
+              disableActions={isPending}
             />
           ))}
           {isPending && <TypingIndicator />}
@@ -73,6 +78,22 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
 
       {/* Input */}
       <div className="shrink-0 border-t border-[rgba(197,198,207,0.15)]">
+        {retryMessage && !isPending && (
+          <div
+            className="px-4 py-2 text-xs text-[#44474e] bg-[#f5f3f6] border-b border-[rgba(197,198,207,0.15)] flex items-center justify-between gap-2"
+            role="status"
+            aria-live="polite"
+          >
+            <span>Last request failed. Retry the same message.</span>
+            <button
+              onClick={onRetry}
+              className="px-2.5 py-1 rounded-md text-[#041635] bg-[#ffffff] border border-[rgba(197,198,207,0.6)] hover:bg-[#e9e7eb] transition-colors"
+              aria-label="Retry last message"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         <MessageInput onSend={onSend} disabled={isPending} />
       </div>
     </div>
@@ -81,7 +102,7 @@ export default function ChatArea({ messages, isPending, onSend, onNew }: Props) 
 
 function TypingIndicator() {
   return (
-    <div className="flex justify-start mb-3 px-0">
+    <div className="flex justify-start mb-3 px-0" role="status" aria-live="polite" aria-label="Assistant is typing">
       <div className="flex items-center gap-2.5">
         <div
           className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-[#89f5e7]"

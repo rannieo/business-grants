@@ -11,7 +11,7 @@ export type ChatResponse =
   | { type: 'question'; question: string; options?: string[] }
   | { type: 'recommendation'; grants: GrantResult[]; tradeoffs: string }
 
-const API = 'http://localhost:8000'
+const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000'
 
 export async function sendMessage(sessionId: string, message: string): Promise<ChatResponse> {
   const res = await fetch(`${API}/api/chat`, {
@@ -19,10 +19,24 @@ export async function sendMessage(sessionId: string, message: string): Promise<C
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ session_id: sessionId, message }),
   })
-  if (!res.ok) throw new Error(`API error ${res.status}`)
+  if (!res.ok) {
+    let detail = `API error ${res.status}`
+    try {
+      const payload = await res.json()
+      if (payload?.detail && typeof payload.detail === 'string') {
+        detail = payload.detail
+      }
+    } catch {
+      // keep default detail if response isn't JSON
+    }
+    throw new Error(detail)
+  }
   return res.json()
 }
 
 export async function clearSession(sessionId: string): Promise<void> {
-  await fetch(`${API}/api/session/${sessionId}`, { method: 'DELETE' })
+  const res = await fetch(`${API}/api/session/${sessionId}`, { method: 'DELETE' })
+  if (!res.ok) {
+    throw new Error(`Failed to clear session (${res.status})`)
+  }
 }

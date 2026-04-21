@@ -9,9 +9,10 @@ type Props = {
   message: Message
   onSend?: (text: string) => void
   isLast?: boolean
+  disableActions?: boolean
 }
 
-export default function MessageBubble({ message, onSend, isLast }: Props) {
+export default function MessageBubble({ message, onSend, isLast, disableActions = false }: Props) {
   if (message.role === 'user') {
     return (
       <div className="flex justify-end mb-3">
@@ -42,7 +43,9 @@ export default function MessageBubble({ message, onSend, isLast }: Props) {
                   <button
                     key={opt}
                     onClick={() => onSend(opt)}
-                    className="px-3 py-1.5 rounded-full text-xs border text-[#041635] bg-[#ffffff] hover:bg-[#f5f3f6] transition-colors"
+                    disabled={disableActions}
+                    aria-label={`Use quick reply: ${opt}`}
+                    className="px-3 py-1.5 rounded-full text-xs border text-[#041635] bg-[#ffffff] hover:bg-[#f5f3f6] transition-colors disabled:opacity-45 disabled:cursor-not-allowed"
                     style={{ borderColor: 'rgba(197, 198, 207, 0.6)' }}
                   >
                     {opt}

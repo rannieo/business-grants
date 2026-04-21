@@ -1,14 +1,17 @@
 import json
+import logging
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from drivers.claude_cli import ClaudeCLIDriver
+from drivers.factory import build_driver_from_env
 from services.matcher import GrantMatcherService
+
+logger = logging.getLogger(__name__)
 
 GRANTS_PATH = Path(__file__).parent.parent / "grants.json"
 grants = json.loads(GRANTS_PATH.read_text())
-service = GrantMatcherService(ClaudeCLIDriver(), grants)
+service = GrantMatcherService(build_driver_from_env(), grants)
 
 app = FastAPI(title="Grant Recommender API")
 app.add_middleware(
@@ -28,8 +31,12 @@ class ChatRequest(BaseModel):
 async def chat(req: ChatRequest):
     try:
         return await service.chat(req.session_id, req.message)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Chat request failed")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to process chat request right now. Please try again.",
+        )
 
 
 @app.delete("/api/session/{session_id}")

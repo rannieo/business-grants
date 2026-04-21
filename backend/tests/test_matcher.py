@@ -66,7 +66,7 @@ async def test_clear_query_calls_llm(grants):
     service = make_service(grants, llm_resp)
     result = await service.chat(
         "s3",
-        "We are a 12-person Singapore software company wanting to expand overseas to Malaysia."
+        "We are a 12-person Singapore SME software company with annual revenue under 100M wanting to expand overseas to Malaysia for the first time."
     )
     assert result["type"] == "recommendation"
     service.driver.complete.assert_called_once()
@@ -117,8 +117,8 @@ async def test_invalid_llm_response_retries_once(grants):
     valid = json.dumps({
         "type": "recommendation",
         "grants": [{
-            "id": "mra", "name": "MRA", "fit": "high",
-            "reason": "Good fit.", "cited": {}, "caveats": "",
+            "id": "mra", "name": "Market Readiness Assistance", "fit": "high",
+            "reason": "Good fit.", "cited": {"requires_new_market": True}, "caveats": "",
         }],
         "tradeoffs": "",
     })
@@ -127,10 +127,30 @@ async def test_invalid_llm_response_retries_once(grants):
 
     result = await service.chat(
         "s6",
-        "We are a 15-person Singapore company wanting to expand overseas."
+        "We are a 15-person Singapore SME company with annual revenue under 100M and this is our first time expanding overseas."
     )
     assert result["type"] == "recommendation"
     assert mock_driver.complete.call_count == 2
+
+
+@pytest.mark.asyncio
+async def test_no_eligible_recommendations_returns_missing_signal_question(grants):
+    llm_resp = json.dumps({
+        "type": "recommendation",
+        "grants": [{
+            "id": "mra", "name": "Market Readiness Assistance",
+            "fit": "high", "reason": "New market entry.",
+            "cited": {"requires_new_market": True}, "caveats": "",
+        }],
+        "tradeoffs": "",
+    })
+    service = make_service(grants, llm_resp)
+    result = await service.chat(
+        "s8",
+        "We are a 12-person Singapore company wanting to expand overseas."
+    )
+    assert result["type"] == "question"
+    assert "SME" in " ".join(result.get("options", [])) or "revenue" in result["question"].lower()
 
 
 @pytest.mark.asyncio
@@ -142,5 +162,5 @@ async def test_two_invalid_responses_raises(grants):
     with pytest.raises(ValueError, match="invalid response"):
         await service.chat(
             "s7",
-            "We are a 10-person Singapore company wanting to expand overseas."
+            "We are a 10-person Singapore SME company with annual revenue under 100M and this is our first time expanding overseas."
         )
