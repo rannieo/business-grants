@@ -52,7 +52,7 @@ pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
 ```
 
-Optional backend environment variables:
+Optional backend environment variables (copy `backend/.env.example` to `backend/.env` to override):
 
 - `LLM_PROVIDER` (default: `claude_cli`)
 - `LLM_TIMEOUT_SECONDS` (default: `45`)
@@ -67,7 +67,7 @@ npm install
 npm run dev
 ```
 
-Optional frontend environment variable:
+Optional frontend environment variable (copy `frontend/.env.example` to `frontend/.env` to override):
 
 - `NEXT_PUBLIC_API_BASE_URL` (default: `http://localhost:8000`)
 
